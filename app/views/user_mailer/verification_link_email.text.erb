@@ -1,0 +1,9 @@
+You're trying to sign into <%= @app.name %>
+
+-------------------------------------------
+
+Finish your Sign In by opening this link in your webbrowser:
+<=% "#{@base_url}/api/1/verify?client=#{@client.id}&token=#{@client.verification_token}" %>
+
+This link is only valid for one hour. Don't want to sign in? Open this link in your webbrowser:
+<%= "#{@base_url}/api/1/cancel-sign-in?client=#{@client.id}" %>

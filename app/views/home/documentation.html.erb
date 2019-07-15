@@ -1,0 +1,260 @@
+<%= render 'menu_header', user: @user, is_client_verified: @is_client_verified, show_signin_sheet: true %>
+
+        <div id="wrapper">
+                <h1>How to use Permissioner in your app/website to authenticate your users?</h1>
+                <p>It's very easy. After you signed into <a href="https://developer.permissioner.com">developer.permissioner.com</a> you can add your app/website on your <a href="https://developer.permissioner.com/apps">Apps Overview Page</a>. After submission, you can start using Permissioner to authenticate your users through Permissioner's <%= link_to 'API', documentation_path(anchor: 'api') %> right away. See the <%= link_to 'How To Guide', documentation_path(anchor: 'how-to-guide') %> below to help you get startet. The app/website will still be manually reviewed for security purposes.</p>
+
+                <h3>The App Key</h3>
+                <p>For every approved app/website you receive a unique <i>App Key</i>. This key is used to distinctly identify your app/website. It is vital that you keep it secret at all times; you don't want other apps or hackers to make user authentication requests in your name. You can copy your <i>App Keys</i> from your <a>App Overview</a> page.</p>
+
+                <a name="api"></a>
+                <div id="api">
+                  <h2>API</h2>
+                  <p>The API makes it possible for you to use Permissioner in your apps/websites. You simply have to call the HTTP requests listet below. Click to expand them.</p>
+                  <div id="base_url">Base URL: https://developer.permissioner.com/api/1</div>
+                  <p>Hint: append parameters to the url, e. g. /autenticate?user=example@mail.com&app_key=eyJ0eXAi...</p>
+                  <ul>
+                    <li>
+                      <div>
+                        <span>POST</span> <span>/authenticate<span> <span>Request the authentication of a user</span>
+                      </div>
+                      <h4>Parameters</h4>
+                      <table>
+                        <tr>
+                          <th>Name</th>
+                          <th>Description</th>
+                        </tr>
+                        <tr>
+                          <td>user<span>(*required)</span></td>
+                          <td>The user's email address or Permissioner <i>username.</i></td>
+                        </tr>
+                        <tr>
+                          <td><span>app_key</span> <span>(*required)</span></td>
+                          <td>Your app's/website's <i>App Key</i>.</td>
+                        </tr>
+                        <tr>
+                          <td>language <span>(optional)</span></td>
+                          <td>The preferred language and region code you want your user to receive the authentication message in. The default is <i>en_US</i>. Supported right now are: <i>en_US</i>, <i>de_DE</i></td>
+                        </tr>
+                      </table>
+                      <h4>Possible Responses<span">content-type: application/json</span></h4>
+                      <table>
+                        <tr>
+                          <th>Description</th>
+                          <th>Response Payload</th>
+                        </tr>
+                        <tr>
+                          <td>
+                            Authentication Request Succeeded<br><span>Permissioner successfully sent an authentication message to the user.<span>
+                          </td>
+                          <td>{
+                                "error" : null,<br>
+                                "permissioner_client_token"   : "eyJ93E0eXAiO...aUkqdEAz9w-Ag"
+                              }</td>
+                        </tr>
+                        <tr>
+                          <td>User Not Valid<br>
+                            <span>The given email address doesn't have a valid format or the <i>username</i> wasn't found.<span>
+                          </td>
+                          <td>
+                            {"error" : "invalid_user",<br>
+                            "permissioner_client_token" : null}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>User Not Allowed To Sign In
+                            <br><span>The user is blocked from singing into the app/website.<span></td>
+                          <td>
+                            {"error" : "user_access_denied",<br>
+                            "permissioner_client_token" : null}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            App Key Invalid
+                            <br><span>The given <i>app_key</i> can't be connected to an app/website.<span>
+                          </td>
+                          <td>
+                            {"error" : "app_not_found",<br>
+                            "permissioner_client_token" : null}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Failed To Send Email
+                            <br><span>An error occured while sending the authentication message to the user.<span>
+                          </td>
+                          <td>
+                            {"error" : "authentication_message_sending_error",<br>
+                            "permissioner_client_token" : null}
+                          </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                App Rejected
+                                <br><span>Your app/website is in violation of our terms of service and is therefore forbidden to use the API.<span>
+                            </td>
+                            <td>
+                                {"error" : "app_status_rejected",<br>
+                                "permissioner_client_token" : null}
+                            </td>
+                        </tr>
+                      </table>
+                      <p><b>Note</b>: If the authentication request succeeds, the response payload will contain a <i>permissioner_client_token</i>. This is a JSON Web Token (JWT) containing a <i>client_id</i> and the user's email address. This token is unique for every client. You need it for the rest of the API requests.</p>
+                    </li>
+
+                    <li>
+                      <div>
+                        <span>GET</span> <span>/verificationStatus<span> <span>Check if the user has verified his/her email address</span>
+                      </div>
+                      <h4>Parameters</h4>
+                      <table>
+                        <tr>
+                          <th">Name</th>
+                          <th>Description</th>
+                        </tr>
+                        <tr>
+                          <td>token <span>(*required)</span></td>
+                          <td>The <i>permissioner_client_token</i> you received from the authentication request response body.</td>
+                        </tr>
+                      </table>
+                      <h4>Possible Responses<span">content-type: application/json</span></h4>
+                      <table>
+                        <tr>
+                          <th>Description</th>
+                          <th>Response Payload</th>
+                        </tr>
+                        <tr>
+                          <td>Verified<br>
+                            <span>The user successfully verified his/her email address.</td>
+                          <td>
+                            {"error" : null,<br>
+                            "verified" : true}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Not Verified Yet<br>
+                            <span>The user has not clicked on the verification link in the email from Permissioner yet.<span>
+                          </td>
+                          <td>
+                            {"error" : null,<br>
+                            "verified" : false}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Invalid Token<br>
+                            <span>The <i>permissioner_client_token</i> couldn't be read.<span>
+                          </td>
+                          <td>
+                            {"error" : "invalid_permissioner_client_token",<br>
+                            "verified" : false}
+                          </td>
+                        </tr>
+                      </table>
+                      <p><b>Note</b>: You will not automatically receive a message from Permissioner when the user verified his/her email address. You need to check the verification status actively. You can do this either periodically or by having the user press a button in your app/website.</p>
+                    </li>
+
+                    <li>
+                      <div>
+                        <span>POST</span> <span>/resendAuthenticationMessage<span> <span>Resend the authentication request for a user</span>
+                      </div>
+                      <h4>Parameters</h4>
+                      <table>
+                        <tr>
+                          <th>Name</th>
+                          <th>Description</th>
+                        </tr>
+                        <tr>
+                          <td>token <span>(*required)</span></td>
+                          <td>The <i>permissioner_client_token</i> you received from the authentication request response body.</td>
+                        </tr>
+                      </table>
+
+                      <h4>Possible Responses<span>content-type: application/json</span></h4>
+                      <table>
+                        <tr>
+                          <th>Description</th>
+                          <th">Response Payload</th>
+                        </tr>
+                        <tr>
+                          <td>Resend Request Succeeded<br>
+                            <span>Permissioner successfully resend the authentication email to the user.</td>
+                          <td>
+                            {"error" : null}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Invalid Token<br>
+                            <span>The <i>permissioner_client_token</i> couldn't be read.<span>
+                          </td>
+                          <td>
+                            {"error" : "invalid_permissioner_client_token"}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Unnecessary Resend Request<br>
+                            <span>The user already verified his/her email address successfully.<span>
+                          </td>
+                          <td>
+                            {"error" : "client_already_verified"}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Failed To Send Email<br>
+                            <span>An error occured while sending the authentication message to the user.<span>
+                          </td>
+                          <td>
+                            {"error" : "authentication_message_sending_error"}
+                          </td>
+                        </tr>
+                      </table>
+                      <p><b>Note</b>: You should provide your users with the possibility to trigger a resend of the authentication message (in case they didn't receive the first one), e.g. with a  button in your app's/website's Sign In interface.</p>
+                    </li>
+                  </ul>
+                </div>
+
+                <div id="instructions">
+                          <a name="how-to-guide"></a>
+                          <h2>How To Guide</h2>
+                          <p>This guide should help you to integrate Permissioner into your app/website. First of all, you need a <i>Sign In Interface</i>.</p>
+                          <h3>The Sign In Interface</h3>
+                          <p>The only things required are a textfield for a user's email address and a way to trigger the Sign In (e. g. a button). To authenticate a user, your app/website needs to send the <span>/authenticate</span> request from <%= link_to "Permissioner's API", documentation_path(anchor: 'api') %> (see above).</p>
+
+                          <%= image_tag("sign-in-1.png", alt: "Sign In Tutorial First Instruction") %>
+
+                          <p>If no errors occur, you will receive a <i>permissioner_client_token</i> inside the JSON response. An example for such a token is:<br><i>eyJ0eXAiOjJKV1QiLCJhbGciOiJIUzI1NiJ9.eyAiaXNzIiA6ICJodHRwczovL3Blcm1pc3Npb25lci5jb20vIiwgInVzZXIiIDogImouZG9lQGdtYWlsLmNvbSIsICJjbGllbnQiIDogIjUwOTU0MjQ0MDE0ODI3NjciIH0.1TKEN9PweAWPNyKn9Uasrcriew34eEnpy5PzuVqGgYE</i>
+                            This is a JSON Web Token (<a href="https://en.wikipedia.org/wiki/JSON_Web_Token">JWT</a>) containing a <i>clientId</i> and a <i>userId</i>. While the clientId uniquely identifies a specific client, the userId distinctly identifies the user over all clients, regardless which apps/websites he/she signs into. The userId is independent from his/her email address, so even if the user would change it on his/her permissioner profile, the userId would remain the same. Because of that, we're recommending using the userId instead of the user's email address to connect the user's data to a successfull Sign In.</p>
+
+                          <h4>How to get the userId inside the JWT?</h4>
+
+                          <p>A JWT consists of three base64 encoded parts, separated by a period: the header, the payload and the signature. The userId (as well as the clientId) can be found in the payload. To access it, you first have to split the <i>permissioner_client_token</i> String by the period character, e. g. in <span>pseudocode</span>:
+
+                          <span><i>Array tokenSplit = permissioner_client_token.split(" . ");</i></span>
+
+                          Then you base64 decode the middle part (the payload):
+
+                          <span><i>String payload = tokenSplit[1].base64Decode();</i></span>
+
+                          The userId can be extracted from the payload, which looks like this:
+
+                          <span>{ "iss" : "https://permissioner.com/", "user" : "5665461311117504", "client" : "5095424401482767" }</span>
+                        </p>
+
+                          <h3>The Email Verification Interface</h3>
+                          <p>When a user tries to sign in, you have to wait for him/her to verify ownership of the entered email address, before you can grant him/her access to the associated account.</p>
+
+                          <%= image_tag("sign-in-2.png", alt: "Sign In Tutorial Second Instruction") %>
+
+                          <p>The easiest way to do this is by changing the user interface and provide a <i>Verified Email</i> button. This way the user can manually inform your app/website, when he/she finished the verification process.</p>
+                          <p> To check if the user successfully verified him-/herself, your app/website needs to send the <span class="api_request">/verificationStatus</span> request from Permissioner's API and read the corresponding JSON response.</p>
+
+                          <h3>Sign In Completed</h3>
+                          <p>After a successfull email verification, two options exist:</p>
+                          <%= image_tag("sign-in-3.png", alt: "Sign In Tutorial Third Instruction") %>
+
+                          <p>1. The user already has an account with your app/website; grant him/her access to it.</p>
+                          <p>2. The user doesn't have an account yet; you should create one. Notice that no extra registration dialog is necessary for new users signing in to your app/website, which normally would consist of an email verification process. This step is already included in Permissioner's sign in process.</p>
+                        </div>
+              </div>
+    </body>
+</html>

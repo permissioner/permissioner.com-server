@@ -1,0 +1,8 @@
+<%= render 'home/menu_header', user: @user, is_client_verified: @is_client_verified, show_signin_sheet: true %>
+
+<h1>Apps</h1>
+<ul>
+  <% @apps.each do |app| %>
+    <li><%= app.name %>: <%= app.app_key %></li>
+  <% end %>
+</ul>

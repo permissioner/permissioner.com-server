@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  access_list_type: MyString
+  app_key: MyString
+  contact_email: MyString
+  icon: MyString
+  name: MyString
+  privacy_policy: MyString
+  status: MyString
+  user_access_list: MyText
+  website: MyString
+
+two:
+  access_list_type: MyString
+  app_key: MyString
+  contact_email: MyString
+  icon: MyString
+  name: MyString
+  privacy_policy: MyString
+  status: MyString
+  user_access_list: MyText
+  website: MyString

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h2>You're trying to sign into</h2>
+    <%= image_tag(@app.icon_url, alt: @app.alt_text) %>
+    <h1><%= @app.name %></h1>
+    <p>
+      Finish your Sign In by clicking this button<br>
+      <%= link_to 'Verify Sign In', "#{@base_url}/api/1/verify?client=#{@client.id}&token=#{@client.verification_token}" %>
+    </p>
+    <p>
+      This link is only valid for one hour. Don't want to sign in?<br>
+      <%= link_to 'Cancel Sign In', "#{@base_url}/api/1/cancel-sign-in?client=#{@client.id}" %>
+    </p>
+  </body>
+</html>

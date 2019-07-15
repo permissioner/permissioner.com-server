@@ -1,0 +1,17 @@
+<%= render 'menu_header', user: @user, is_client_verified: @is_client_verified, show_signin_sheet: @is_client_verified %>
+<div id="wrapper">
+  <header>
+      <h1>Permissioner</h1>
+      <h4>for Developers</h4>
+      <h2>secure, passwordless authentication for your users</h2>
+      <% if !@user || !@user.email %>
+        <%= render 'login_form' %>
+      <% elsif !@is_client_verified %>
+        <p>You're trying to sign in as <%= @user.username ? @user.username : @user.email_normalized %>. Verify yourself, by clicking on the link we sent you.<br /><br />Don't want to sign in?  <%= link_to 'Cancel Sign in', signout_path %></p>
+        <p><%= link_to 'I Verified Myself', check_verification_status_path %></p>
+      <% end %>
+  </header>
+  <%= render 'benefits' %>
+  <%= render 'how_to' %>
+  <%= render 'faq' %>
+</div>

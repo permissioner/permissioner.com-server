@@ -1,0 +1,11 @@
+<div id="wrapper">
+    <% if @app %>
+      <%= image_tag(@app.icon_url, alt: @app.alt_text) %>
+      <h2><%= @app.name %></h2>
+      <p>You successfully verified your email address.</p>
+      <p>Close this window and return to where you signed in from.</p>
+    <% else %>
+      <p>Verification failed! You probably waited too long to click on the link we sent you.</p>
+      <p>Go back where you're trying to sign in from and try it again.</p>
+    <% end %>
+</div>

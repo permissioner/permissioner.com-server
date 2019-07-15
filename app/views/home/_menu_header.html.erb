@@ -1,0 +1,22 @@
+<div id="menu">
+  <nav>
+    <ul>
+        <li><%= link_to 'Home ', root_path %></li>
+        <li><%= link_to 'How It Works ', how_it_works_path %></li>
+        <li><%= link_to 'Documentation (API)', documentation_path %></li>
+    </ul>
+  </nav>
+  <% if show_signin_sheet %>
+    <% if @user.nil? || !@user.email %>
+      <%= render 'login_form' %>
+    <% elsif !@is_client_verified %>
+        <div>
+          You're trying to sign in as <i><%= @user.username ? @user.username : @user.email_normalized %></i> We've sent you a link. <%= link_to 'Cancel Sign in', signout_path %> <%= link_to 'I verified myself', check_verification_status_path %>
+        </div>
+    <% else %>
+      <div>
+        n.autzen@gmail.com <%= link_to 'Your Apps', apps_path %> <%= link_to 'Sign out', signout_path %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

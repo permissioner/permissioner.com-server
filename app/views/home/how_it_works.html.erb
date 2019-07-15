@@ -1,0 +1,29 @@
+<%= render 'menu_header', user: @user, is_client_verified: @is_client_verified, show_signin_sheet: true %>
+
+        <div id="wrapper">
+          <h1>How does authenticating users in your app / website with Permissioner work?</h1>
+          <p>Permissioner's process to authenticate users for other apps / websites is quite simple. In addition to the following technical explanation, make sure to read the <%= link_to 'Documentation', documentation_path %> to understand how to use it.</p>
+
+          <a name="authentication"></a>
+          <h2>Authentication process</h2>
+            <ol>
+              <%= image_tag("authentication_request.png", alt: "Authentication Request Icon") %>
+              <li>When you want to authenticate a user, your app / website has to send the <%= link_to '/autenticate', documentation_path(anchor: 'api') %> request to Permissioner's API, containing your app's / website's App Key and the user's email address.</li>
+              <%= image_tag("app_user_verification.png", alt: "App and user verification icon") %>
+              <li>Permissioner then identifies your app / website via the App Key and validates that it is allowed to use Permissioner and that the provided email address is allowed to sign into it.</li>
+              <li>If both holds true, Permissioner generates an anonymized <i>clientID</i>, representing the client the user is trying to sign into. With the clientID, it is possible for Permissioner to distinctly assign an authentication attempt to a specific client.</li>
+              <li>With the clientID, Permissioner generates a secure verification link. It then sends this link to the user's email address in form of a verification request on your app's / website's behalf. The verification link is only valid for an hour.</li>
+              <%= image_tag("sending_email_verification.png", alt: "Sending email verification link icon") %>
+              <%= image_tag("authentication_response.png", alt: "Authentication Request Icon") %>
+              <li>With the user's email address and the newly created clientID, Permissioner also generates the <i>permissioner_client_token</i> - a JSON Web Token (JWT) that is needed for the next API request. Inside the API response, this token is then send back to your app / website, where you need to store it in order to later check, if the user verified his / her email address with Permissioner.</li>
+            </ol>
+
+            <a name="verification"></a>
+            <h2>Email address verification</h2>
+            <ol>
+              <%= image_tag("email_verification.png", alt: "User verifies his/her email address icon") %>
+              <li>To verify his / her email address and complete the sign in process, the user needs to click on the verification link sent to him / her. By doing so, Permissioner is ensured that the user has indeed access to the provided email address, which it then can attest to your app / website.</li>
+              <%= image_tag("verification_status.png", alt: "Check Verification Status Icon") %>
+              <li>To check if the user has verified his / her email address, your app / website needs to send the <%= link_to '/verificationStatus', documentation_path(anchor: 'api') %> request to Permissioner's API. If the API response tells you, that the user did verify it, you can grant him / her access to the underlying account in which the user is trying to sign into.</li>
+            </ol>
+        </div>
